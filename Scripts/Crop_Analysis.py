@@ -6,7 +6,7 @@ import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
 
-# where to save output
+# Location to save output:
 
 root_directory=r"D:/ECAS_Cohort/FL_Crops/Moderate"
 
