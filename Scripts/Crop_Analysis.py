@@ -140,35 +140,41 @@ for i in range(len(pathList)):
 
     directory=pathList[i]+"/"
 
-# Run functions for aptamer channel.
+# Run functions for aptamer channel:
 
     filename="Apt.tif"
     apt_img=io.imread(directory+filename)
-    #numpydata = asarray(apt_img)
-    #apt_threshold_value=(numpydata.mean() + 3*numpydata.std())
     apt_binary_img=threshold_img_fixed(apt_img,threshold_value=19300)
-    #print("Aptamer threshold value was %d."%apt_threshold_value)
     im = Image.fromarray(apt_binary_img)
     im.save(directory+'Apt_Binary.tif')
     apt_features_number,apt_labelled_img=label_image(apt_binary_img)
     print("%d features were detected in the aptamer image."%apt_features_number)
     apt_measurements=analyse_labelled_img(apt_labelled_img,apt_img)
 
-# Run functions for antibody channel.
+    #Alternative variable thresholding option which calculates value of mean +/- x*SD:
+    #numpydata = asarray(apt_img)
+    #apt_threshold_value=(numpydata.mean() + 3*numpydata.std())
+    #apt_binary_img=threshold_img_fixed(apt_img,apt_threshold_value)
+    #print("Aptamer threshold value was %d."%apt_threshold_value)
+
+# Run functions for antibody channel:
 
     filename="Ab.tif"
     ab_img=io.imread(directory+filename)
-    #numpydata = asarray(ab_img)
-    #ab_threshold_value=(numpydata.mean() + 3*numpydata.std())
     ab_binary_img=threshold_img_fixed(ab_img,threshold_value=13500)
-    #print("Antibody threshold value was %d."%ab_threshold_value)
     im = Image.fromarray(ab_binary_img)
     im.save(directory+'Ab_Binary.tif')
     ab_features_number,ab_labelled_img=label_image(ab_binary_img)
     print("%d features were detected in the antibody image."%ab_features_number)
     ab_measurements=analyse_labelled_img(ab_labelled_img,ab_img)
 
-# Run functions for dapi channel.
+    #Alternative variable thresholding option which calculates value of mean +/- x*SD:
+    #numpydata = asarray(ab_img)
+    #ab_threshold_value=(numpydata.mean() + 3*numpydata.std())
+    #ab_binary_img=threshold_img_fixed(ab_img,ab_threshold_value)
+    #print("Aptamer threshold value was %d."%ab_threshold_value)
+
+# Run functions for dapi channel:
 
     filename="Dapi.tif"
     dapi_img=io.imread(directory+filename)
@@ -179,7 +185,7 @@ for i in range(len(pathList)):
     print("%d features were detected in the dapi image."%dapi_features_number)
     dapi_measurements=analyse_labelled_img(dapi_labelled_img,dapi_img)
 
-# Run coincidence functions.
+# Run coincidence functions:
 
     ab_pixel_overlap_img,ab_pixel_overlap_count,ab_pixel_fraction=pixel_coinc(ab_binary_img,apt_binary_img)
     print("%.2f of antibody pixels had coincidence with aptamer image."%ab_pixel_fraction)
@@ -225,7 +231,7 @@ for i in range(len(pathList)):
     ab_distance_to_nuc=min_distance(ab_measurements,dapi_measurements)*pixel_size/1000.0
     dapi_distance_to_nuc=min_distance(dapi_measurements,dapi_measurements)*pixel_size/1000.0
 
-# Output data.
+# Output data:
 
     ab_measurements['Distance to nucleus']=min_distance(ab_measurements,dapi_measurements)
     ab_measurements.to_csv(root_directory + '/' 'ab' +str(i+1)+'.csv', sep = '\t')
@@ -242,7 +248,7 @@ for i in range(len(pathList)):
     ax.imshow(imRGB)
     plt.savefig(directory+"binary.png")
 
-# Open file for writing:
+# Open file for writing and save data output:
 
     Out_nc=open(directory+'/'+'Aptamer_overall_stats.txt','w')
     Out_nc.write("Number of detected features = %.2f \n" %apt_features_number)
